@@ -10,9 +10,9 @@ const reducers = (state = intialState, action) => {
     case API_CALL_REQUEST: 
       return {...state, error: false, fetching: true, request: action.request};
     case API_CALL_DONE:
-      return {...state, error: false, fetching: false, [action.name]: action[action.name]};
+      return {...state, error: false, fetching: false, [state.request.name]: action.payload};
     case API_CALL_FAILURE:
-      return {...state, error: true, fetching: false, ...{error: action.error}};
+      return {...state, error: action.error, fetching: false};
     default:
       return state;
   }

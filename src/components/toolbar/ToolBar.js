@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import injectSheet from 'react-jss'
+import injectSheet from 'react-jss';
 
 import { apiCallRequest } from '../../redux/actions/actions';
+import ListOption from '../../shared/components/ListOption';
 
 const styles = {
   container: {
@@ -11,6 +12,14 @@ const styles = {
     backgroundColor: '#333333',
     display: 'flex',
     flexDirection: 'row-reverse'
+  },
+  toolOption: {
+    display: 'inherit',
+    flexDirection: 'inherit',
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      cursor: 'pointer'
+    }
   },
   profilePic: {
     width: '45px',
@@ -22,7 +31,7 @@ const styles = {
   profileName: {
     fontWeight: 'bold',
     alignSelf: 'center',
-    margin: 0,
+    margin: '0 0 0 15px',
   }
 }
 
@@ -43,7 +52,7 @@ class ToolBar extends Component {
       <header className={classes.container}>
         {
           (!!me) ? (
-            <>
+            <div className={classes.toolOption}>
               <img 
                 className={classes.profilePic}
                 src={me.images[0].url} 
@@ -52,12 +61,20 @@ class ToolBar extends Component {
                 className={classes.profileName}>
                 {me.display_name}
               </p>
-            </>
+            </div>
           ) : 
           (null)
         }
       </header>
         
+    )
+  }
+
+  listOption() {
+    return(
+      <div>
+        <ListOption />
+      </div>
     )
   }
 }

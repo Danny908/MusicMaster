@@ -1,4 +1,5 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
+import { createAction } from 'redux-actions';
 import axios from 'axios';
 
 import { API_CALL_REQUEST, API_CALL_DONE, API_CALL_FAILURE } from './redux/constants';
@@ -14,7 +15,8 @@ function* workerAPI(action) {
   const responseName = action.request.name;
   try {
     const response = yield call(doRequest, action.request);
-    yield put({type: API_CALL_DONE, name: responseName, [responseName]: response.data})
+    // yield put({type: API_CALL_DONE, name: responseName, [responseName]: response.data})
+    yield put(createAction(API_CALL_DONE)(response.data));
   } catch(error) {
     yield put({type: API_CALL_FAILURE, name: responseName, error: error.response.data.error})
   }
