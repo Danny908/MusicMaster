@@ -1,25 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import Fetching from './shared/components/fetching/Fetching';
 
 import './App.scss';
 
-class App extends Component {
-  componentDidUpdate() {
-    console.log(this.props.error);
-    if(this.props.error) {
-      this.props.history.push('/error');
-    }
-  }
-  render() {
-
-    return(
-      <>
-      {
-        this.props.fetching ? (<h1>Loading ...</h1>) : (<h1>Welcome</h1>)
-      }
-      </>
-    )
-  }
+const App = (props) => {
+  return(
+    <>
+    {(props.fetching || props.error) ? (<Fetching />) : (<h1>Welcome</h1>)}
+    </>
+  )
 }
 
 function mapStateToProps(state) {

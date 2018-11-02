@@ -9,7 +9,6 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import Profile from './components/profile/Profile';
 import ToolBar from './components/toolbar/ToolBar';
-import Error from './components/error/Error';
 import reducers from './redux/reducers/reducers';
 import { watcherAPI } from './sagas';
 
@@ -21,16 +20,13 @@ sagaMiddleware.run(watcherAPI);
 
 ReactDom.render(
   <Provider store={store}>
-    <>
-    <ToolBar />
     <BrowserRouter>
       <>
+      <ToolBar />
       <Route path="/dashboard" component={App}></Route>
       <Route path="/profile" component={Profile}></Route>
-      <Route path="/error" component={Error}></Route>
       </>
     </BrowserRouter>
-    </>
   </Provider>,
   document.getElementById('root')
 );

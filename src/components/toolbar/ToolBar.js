@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
+import { withRouter } from 'react-router-dom';
 
 import { apiCallRequest } from '../../redux/actions/actions';
-import ListOption from '../../shared/components/ListOption';
+import ListOption from '../../shared/components/list-option/ListOption';
 
 const styles = {
   container: {
@@ -16,6 +17,7 @@ const styles = {
   toolOption: {
     display: 'inherit',
     flexDirection: 'inherit',
+    position: 'relative',
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
       cursor: 'pointer'
@@ -32,6 +34,16 @@ const styles = {
     fontWeight: 'bold',
     alignSelf: 'center',
     margin: '0 0 0 15px',
+  },
+  listContainer: {
+    backgroundColor: '#5C5C5C',
+    position: 'absolute',
+    top: '100%',
+    width: '100%',
+    display: 'none',
+    '&.show': {
+      display: 'block'
+    } 
   }
 }
 
@@ -45,14 +57,20 @@ class ToolBar extends Component {
         path: '/me'
       }
     });
+    this.state = {
+      show: false
+    }
   }
   render() {
-    const { me, classes } = this.props;
+    const { me, classes, history } = this.props;
     return(
       <header className={classes.container}>
         {
           (!!me) ? (
-            <div className={classes.toolOption}>
+            <div 
+              className={classes.toolOption}
+              onMouseEnter={() => this.setState({show: true})}
+              onMouseLeave={() => this.setState({show: false})}>
               <img 
                 className={classes.profilePic}
                 src={me.images[0].url} 
@@ -61,6 +79,7 @@ class ToolBar extends Component {
                 className={classes.profileName}>
                 {me.display_name}
               </p>
+              {this.listOption(classes, history)}
             </div>
           ) : 
           (null)
@@ -70,10 +89,30 @@ class ToolBar extends Component {
     )
   }
 
-  listOption() {
+  listOption(classes, history) {
+    const options = [
+      {
+        value: 'Profile',
+        path: '/profile'
+      },
+      {
+        value: 'Dashboard',
+        path: '/dashboard'
+      }
+    ];
+    const template = options.map((option, i) => {
+      return(
+        <ListOption
+          history={history}
+          data={option}
+          key={i}
+        />
+      );
+    });
+    const myClasses = `${classes.listContainer} ${this.state.show ? 'show' : ''}`;
     return(
-      <div>
-        <ListOption />
+      <div className={myClasses}>
+        {template}
       </div>
     )
   }
@@ -91,4 +130,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectSheet(styles)(ToolBar));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(injectSheet(styles)(ToolBar)));
