@@ -9,7 +9,10 @@ const style = {
     fontSize: '14px',
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.3)'
-    }
+    }, 
+    '&:last-child': {
+      borderTop: 'none',
+    } 
   }
 }
 

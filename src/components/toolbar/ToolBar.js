@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
-import { withRouter } from 'react-router-dom';
 
-import { apiCallRequest } from '../../redux/actions/actions';
 import ListOption from '../../shared/components/list-option/ListOption';
 
 const styles = {
@@ -48,36 +45,29 @@ const styles = {
 }
 
 class ToolBar extends Component {
-  constructor(props) {
-    super(props);
-    this.props.getProfile({
-      name: 'me',
-      options: {
-        method: 'GET',
-        path: '/me'
-      }
-    });
-    this.state = {
-      show: false
+  componentDidMount() {
+    if (!this.props.profile.data) {
+      this.props.getProfile();
     }
   }
   render() {
-    const { me, classes, history } = this.props;
+    const { profile, classes, history } = this.props;
+    const { data } = profile;
     return(
       <header className={classes.container}>
         {
-          (!!me) ? (
+          (!!data) ? (
             <div 
               className={classes.toolOption}
-              onMouseEnter={() => this.setState({show: true})}
-              onMouseLeave={() => this.setState({show: false})}>
+              onMouseEnter={() => this.props.onToggle()}
+              onMouseLeave={() => this.props.onToggle()}>
               <img 
                 className={classes.profilePic}
-                src={me.images[0].url} 
+                src={data.images[0].url} 
                 alt="Profile"/>
               <p 
                 className={classes.profileName}>
-                {me.display_name}
+                {data.display_name}
               </p>
               {this.listOption(classes, history)}
             </div>
@@ -90,6 +80,7 @@ class ToolBar extends Component {
   }
 
   listOption(classes, history) {
+    const status = this.props.toggle;
     const options = [
       {
         value: 'Profile',
@@ -109,7 +100,7 @@ class ToolBar extends Component {
         />
       );
     });
-    const myClasses = `${classes.listContainer} ${this.state.show ? 'show' : ''}`;
+    const myClasses = `${classes.listContainer} ${status ? 'show' : ''}`;
     return(
       <div className={myClasses}>
         {template}
@@ -118,16 +109,4 @@ class ToolBar extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    me: state.me
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    getProfile: requestOptions => dispatch(apiCallRequest(requestOptions))
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(injectSheet(styles)(ToolBar)));
+export default injectSheet(styles)(ToolBar);

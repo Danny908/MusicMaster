@@ -1,6 +1,5 @@
 import React from 'react';
 import injectSheet from 'react-jss';
-import { connect } from 'react-redux';
 
 import Fetching from '../../shared/components/fetching/Fetching';
 
@@ -10,13 +9,11 @@ const style = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    padding: '0 20px 20px 20px'
+    alignItems: 'center'
   },
   title: {
     borderBottom: '1px solid gray',
-    width: '350px',
-    textAlign: 'center'
+    width: '350px'
   },
   profileContainer: {
     backgroundColor: 'whitesmoke',
@@ -30,14 +27,15 @@ const style = {
   },
   picture: {
     borderRadius: '50%',
-    width: '150px'
+    width: '150px',
+    border: '1px solid gray'
   },
   dataContainer: {
     width: '100%',
     marginTop: '25px'
   },
   label: {
-    color: 'gray',
+    color: 'black',
     fontSize: '18px',
     marginBottom: '10px'
   },
@@ -48,37 +46,31 @@ const style = {
   }
 }
 
-const Profile = (props)  => {
-    const { me, classes, fetching, error } = props;
-    return (fetching || error) ? (
-      <Fetching />
+const Profile = (props) => {
+    const { profile, classes } = props;
+    const {data, loading, error} = profile;
+
+    return (loading || !data || error) ? (
+      <Fetching error={error} />
     ): 
     (
       <div className={classes.container}>
-        <h1 className={classes.title}>Profile</h1>
+        <h1 className={classes.title}>Profile:</h1>
         <div className={classes.profileContainer}>
-          <img className={classes.picture} src={me.images[0].url} alt="Profile"/>
+          <img className={classes.picture} src={data.images[0].url} alt="Profile"/>
           <div className={classes.dataContainer}>
-            <p className={classes.label}>Username</p>
-            <p className={classes.data}>{me.display_name}</p>
-            <p className={classes.label}>Email</p>
-            <p className={classes.data}>{me.email}</p>
-            <p className={classes.label}>Birthday</p>
-            <p className={classes.data}>{me.birthdate}</p>
-            <p className={classes.label}>Country</p>
-            <p className={classes.data}>{me.country}</p>
+            <p className={classes.label}>Username:</p>
+            <p className={classes.data}>{data.display_name}</p>
+            <p className={classes.label}>Email:</p>
+            <p className={classes.data}>{data.email}</p>
+            <p className={classes.label}>Birthday:</p>
+            <p className={classes.data}>{data.birthdate}</p>
+            <p className={classes.label}>Country:</p>
+            <p className={classes.data}>{data.country}</p>
           </div>
         </div>
       </div>
     );
 };
 
-function mapStateToProps(state) {
-  return {
-    me: state.me,
-    error: state.error,
-    fetching: state.fetching
-  }
-}
-
-export default connect( mapStateToProps, null )(injectSheet(style)(Profile));
+export default (injectSheet(style)(Profile));

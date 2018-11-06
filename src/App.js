@@ -1,23 +1,25 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import Fetching from './shared/components/fetching/Fetching';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 
+import { ToolBarContainer } from './components/toolbar/toolbar.container';
+import { Routes } from './routes';
+import { configStore } from './redux-root/store';
 import './App.scss';
+
+const store = configStore();
 
 const App = (props) => {
   return(
-    <>
-    {(props.fetching || props.error) ? (<Fetching />) : (<h1>Welcome</h1>)}
-    </>
+    <Provider store={store}>
+      <BrowserRouter>
+        <div className='app-container'>
+          <ToolBarContainer />
+          <Routes />
+        </div>
+      </BrowserRouter>
+    </Provider>
   )
 }
 
-function mapStateToProps(state) {
-  return {
-    me: state.me,
-    error: state.error,
-    fetching: state.fetching
-  }
-}
-
-export default connect(mapStateToProps, null)(App);
+export default App;
